@@ -6,25 +6,19 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Comment extends Model
+class PostImage extends Model
 {
     use HasFactory;
 
-    protected $table = "comments";
+    protected $table = "post_images";
 
     protected $fillable = [
         'post_id',
-        'user_id',
-        'content',
+        'path'
     ];
 
     public function post() : BelongsTo
     {
         return $this->belongsTo(Post::class);
-    }
-
-    public function user() : BelongsTo
-    {
-        return $this->belongsTo(User::class);
     }
 }
