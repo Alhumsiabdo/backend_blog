@@ -3,71 +3,40 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
-use Illuminate\Http\Request;
+use App\Http\Requests\LoginRequest;
+use App\Http\Requests\RegisterUserRequest;
+use App\Repository\AuthRepositoryInterface;
+use Illuminate\Auth\Events\Login;
 
 class AuthController extends Controller
 {
-    // public function __construct()
-    // {
-    //     $this->middleware("auth:api", ["except"=> ["login"]]);
-    // }
-
-    public function register(Request $request)
-{
-    $this->validate($request, [
-        "name" => "required",
-        "email" => "required|unique:users,email",
-        "password" => "required|min:6",
-        "role" => "required"
-    ]);
-
-    $user = new User;
-
-    $user->name = $request->name;
-    $user->email = $request->email;
-    $user->password = bcrypt($request->password);
-    $user->role = $request->role;
-    $user->save();
-
-    return response()->json(["message" => "user created successfully!", "code" => "201"]);
-}
-
-
-    public function login()
+    protected $authRepository;
+    public function __construct(AuthRepositoryInterface $authRepository)
     {
-        $credentials = request(['email', 'password']);
-
-        if (! $token = auth()->attempt($credentials)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
-        }
-
-        return $this->respondWithToken($token);
+        $this->authRepository = $authRepository;
+        $this->middleware("auth:api", ["except" => ["login", "register"]]);
     }
 
-    public function me()
+    public function register(RegisterUserRequest $registerUserRequest)
     {
-        return response()->json(auth()->user());
+        $userData = $registerUserRequest->validated();
+        if ($this->authRepository->register($userData)) {
+            return response()->json(['message' => 'User register successfully', 'code' => 200], 201);
+        } else {
+            return response()->json(['message' => 'Field to register user'], 500);
+        }
+    }
+
+
+    public function login(LoginRequest $loginRequest)
+    {
+        $credentials = $loginRequest->validated();
+
+        return $this->authRepository->login($credentials);
     }
 
     public function logout()
     {
-        auth()->logout();
-
-        return response()->json(['message' => 'Successfully logged out']);
-    }
-
-    public function refresh()
-    {
-        return $this->respondWithToken(auth()->refresh());
-    }
-
-    protected function respondWithToken($token)
-    {
-        return response()->json([
-            'access_token' => $token,
-            'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 60
-        ]);
+        return $this->authRepository->logout();
     }
 }
