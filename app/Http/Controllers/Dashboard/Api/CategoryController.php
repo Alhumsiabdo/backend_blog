@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Dashboard\Api;
 
+use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
@@ -19,24 +20,23 @@ class CategoryController extends Controller
     public function index()
     {
         $categories = $this->categoryRepository->all();
-        return response()->json($categories);
+        return ApiResponse::success($categories);
     }
 
     public function show($id)
     {
         $category = $this->categoryRepository->find($id);
         if ($category) {
-            return response()->json($category);
+            return ApiResponse::success($category);
         }
-
-        return response()->json(['message' => 'Category not found'], 404);
+        return ApiResponse::error("Category not found.", [], 404);
     }
 
     public function store(StoreCategoryRequest $storeCategoryRequest)
     {
         $data = $storeCategoryRequest->validated();
         $category = $this->categoryRepository->create($data);
-        return response()->json($category, 201);
+        return ApiResponse::success($category, "Category Created Successfully.");
     }
 
     public function update($id, UpdateCategoryRequest $updateCategoryRequest)
@@ -44,10 +44,9 @@ class CategoryController extends Controller
         $data = $updateCategoryRequest->validated();
         $category = $this->categoryRepository->update($id, $data);
         if ($category) {
-            return response()->json($category);
+            return ApiResponse::success($category, "Category Updated Successfully.");
         }
-
-        return response()->json(['message' => 'Category not found'], 404);
+        return ApiResponse::error("Category not found.", [], 404);
     }
 
     public function destroy($id)
@@ -55,9 +54,9 @@ class CategoryController extends Controller
         $deleted = $this->categoryRepository->delete($id);
 
         if ($deleted) {
-            return response()->json(['message' => 'Category deleted']);
+            return ApiResponse::success($deleted, "Category deleted successfully.", 200);
         }
 
-        return response()->json(['message' => 'Category not found'], 404);
+        return ApiResponse::error("Category not found.", [], 404);
     }
 }
