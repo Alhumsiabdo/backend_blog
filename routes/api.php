@@ -3,6 +3,7 @@
 use App\Http\Controllers\Dashboard\Api\{
     AuthController,
     CategoryController,
+    CommentController,
     PostController,
     TagController
 };
@@ -58,5 +59,11 @@ Route::group([
         Route::post('tag/create', 'store');
         Route::post('tag/edit/{id}', 'update');
         Route::delete('tag/destroy/{id}', 'destroy');
+    });
+
+    // Comments Route
+    Route::controller(CommentController::class)->group(function () {
+        Route::get('post/{post}/comments', 'showCommentsByPostId');
+        Route::delete('comment/destroy/{id}', 'destroy');
     });
 });
