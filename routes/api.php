@@ -1,8 +1,11 @@
 <?php
 
-use App\Http\Controllers\Dashboard\Api\AuthController;
-use App\Http\Controllers\Dashboard\Api\CategoryController;
-use App\Http\Controllers\Dashboard\Api\PostController;
+use App\Http\Controllers\Dashboard\Api\{
+    AuthController,
+    CategoryController,
+    PostController,
+    TagController
+};
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,8 +20,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 // Public routes that do not require authentication
-Route::post('auth/register', [AuthController::class, 'register']);
-Route::post('auth/login', [AuthController::class, 'login']);
+Route::controller(AuthController::class)->group(function () {
+    Route::post('auth/register', 'register');
+    Route::post('auth/login', 'login');
+});
 
 Route::group([
 
@@ -29,15 +34,29 @@ Route::group([
     Route::post('logout', [AuthController::class, 'logout']);
 
     // Categories Route
-    Route::get('categories', [CategoryController::class, 'index']);
-    Route::get('category/{id}', [CategoryController::class, 'show']);
-    Route::post('category/create', [CategoryController::class, 'store']);
-    Route::post('category/edit/{id}', [CategoryController::class, 'update']);
-    Route::delete('category/destroy/{id}', [CategoryController::class, 'destroy']);
+    Route::controller(CategoryController::class)->group(function () {
+        Route::get('categories', 'index');
+        Route::get('category/{id}', 'show');
+        Route::post('category/create', 'store');
+        Route::post('category/edit/{id}', 'update');
+        Route::delete('category/destroy/{id}', 'destroy');
+    });
+
 
     // Posts Route
-    Route::get('posts', [PostController::class, 'index']);
-    Route::get('post/{id}', [PostController::class, 'show']);
-    Route::post('change-status/{id}', [PostController::class, 'changeStatus']);
-    Route::delete('post/destroy/{id}', [PostController::class, 'destroy']);
+    Route::controller(PostController::class)->group(function () {
+        Route::get('posts', 'index');
+        Route::get('post/{id}', 'show');
+        Route::post('change-status/{id}', 'changeStatus');
+        Route::delete('post/destroy/{id}', 'destroy');
+    });
+
+    // Tags Route
+    Route::controller(TagController::class)->group(function () {
+        Route::get('tags', 'index');
+        Route::get('tag/{id}', 'show');
+        Route::post('tag/create', 'store');
+        Route::post('tag/edit/{id}', 'update');
+        Route::delete('tag/destroy/{id}', 'destroy');
+    });
 });
