@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\Api\AuthController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Dashboard\Api\AuthController;
+use App\Http\Controllers\Dashboard\Api\CategoryController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,14 +15,22 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// Public routes that do not require authentication
+Route::post('auth/register', [AuthController::class, 'register']);
+Route::post('auth/login', [AuthController::class, 'login']);
+
 Route::group([
 
-    'middleware' => 'api',
+    'middleware' => 'auth:api',
     'prefix' => 'auth'
 
-], function ($router) {
-
-    Route::post('register', [AuthController::class, 'register']);
-    Route::post('login', [AuthController::class, 'login']);
+], function () {
     Route::post('logout', [AuthController::class, 'logout']);
+
+    // Categories Route
+    Route::get('categories', [CategoryController::class, 'index']);
+    Route::get('category/{id}', [CategoryController::class, 'show']);
+    Route::post('category/create', [CategoryController::class, 'store']);
+    Route::post('category/edit/{id}', [CategoryController::class, 'update']);
+    Route::delete('category/destroy/{id}', [CategoryController::class, 'destroy']);
 });
