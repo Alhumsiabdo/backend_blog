@@ -5,10 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 
 class Tag extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $table = "tags";
 
@@ -20,5 +22,18 @@ class Tag extends Model
     public function post() : BelongsToMany
     {
         return $this->belongsToMany(Post::class, 'post_tag');
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($tag) {
+            $tag->slug = Str::slug($tag->name);
+        });
+
+        static::updating(function ($tag) {
+            $tag->slug = Str::slug($tag->name);
+        });
     }
 }
