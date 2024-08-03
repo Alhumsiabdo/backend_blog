@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Dashboard\Api\AuthController;
 use App\Http\Controllers\Dashboard\Api\CategoryController;
+use App\Http\Controllers\Dashboard\Api\PostController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -33,4 +34,10 @@ Route::group([
     Route::post('category/create', [CategoryController::class, 'store']);
     Route::post('category/edit/{id}', [CategoryController::class, 'update']);
     Route::delete('category/destroy/{id}', [CategoryController::class, 'destroy']);
+
+    // Posts Route
+    Route::get('posts', [PostController::class, 'index']);
+    Route::get('post/{id}', [PostController::class, 'show']);
+    Route::post('change-status/{id}', [PostController::class, 'changeStatus']);
+    Route::delete('post/destroy/{id}', [PostController::class, 'destroy']);
 });
