@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Dashboard\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterUserRequest;
-use App\Repository\AuthRepositoryInterface;
+use App\Repository\Dashboard\AuthRepositoryInterface;
 use Illuminate\Auth\Events\Login;
 
 class AuthController extends Controller
@@ -14,7 +14,6 @@ class AuthController extends Controller
     public function __construct(AuthRepositoryInterface $authRepository)
     {
         $this->authRepository = $authRepository;
-        $this->middleware("auth:api", ["except" => ["login", "register"]]);
     }
 
     public function register(RegisterUserRequest $registerUserRequest)

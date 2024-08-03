@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Repository\Eloquent;
+namespace App\Repository\Dashboard\Eloquent;
 
 use App\Models\User;
-use App\Repository\AuthRepositoryInterface;
+use App\Repository\Dashboard\AuthRepositoryInterface;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Contracts\Auth\Authenticatable;
 
