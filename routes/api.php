@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Dashboard\Api\{
+    AdminController,
     AuthController,
     CategoryController,
     CommentController,
@@ -34,12 +35,20 @@ Route::group([
 ], function () {
     Route::post('logout', [AuthController::class, 'logout']);
 
+    // Admins Route
+    Route::controller(AdminController::class)->group(function () {
+        Route::get('admins', 'index');
+        Route::get('admin/{id}', 'show');
+        Route::post('admin/create', 'store');
+        Route::post('admin/edit/{id}', 'update');
+        Route::delete('admin/destroy/{id}', 'destroy');
+    });
     // Categories Route
     Route::controller(CategoryController::class)->group(function () {
         Route::get('categories', 'index');
         Route::get('category/{id}', 'show');
         Route::post('category/create', 'store');
-        Route::post('category/edit/{id}', 'update');
+        Route::put('category/edit/{id}', 'update');
         Route::delete('category/destroy/{id}', 'destroy');
     });
 
