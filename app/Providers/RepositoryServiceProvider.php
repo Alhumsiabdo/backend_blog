@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Repository\Dashboard\{
+    AdminRepositoryInterface,
     AuthRepositoryInterface,
     CategoryRepositoryInterface,
     CommentRepositoryInterface,
@@ -10,6 +11,7 @@ use App\Repository\Dashboard\{
     TagRepositoryInterface,
 };
 use App\Repository\Dashboard\Eloquent\{
+    AdminRepository,
     AuthRepository,
     CategoryRepository,
     CommentRepository,
@@ -26,6 +28,7 @@ class RepositoryServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(AuthRepositoryInterface::class, AuthRepository::class);
+        $this->app->bind(AdminRepositoryInterface::class, AdminRepository::class);
         $this->app->bind(CategoryRepositoryInterface::class, CategoryRepository::class);
         $this->app->bind(PostRepositoryInterface::class, PostRepository::class);
         $this->app->bind(TagRepositoryInterface::class, TagRepository::class);

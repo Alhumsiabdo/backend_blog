@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
+use DateTimeInterface;
 
 class Category extends Model
 {
@@ -18,6 +19,11 @@ class Category extends Model
         'name',
         'slug',
     ];
+
+    protected function serializeDate(DateTimeInterface $date)
+    {
+        return $date->format('Y-m-d');
+    }
 
     public function post() : BelongsToMany
     {
