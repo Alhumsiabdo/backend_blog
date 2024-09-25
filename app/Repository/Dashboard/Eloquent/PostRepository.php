@@ -4,7 +4,7 @@ namespace App\Repository\Dashboard\Eloquent;
 
 use App\Models\Post;
 use App\Repository\Dashboard\PostRepositoryInterface;
-
+use Illuminate\Database\Eloquent\Collection;
 
 class PostRepository implements PostRepositoryInterface
 {
@@ -15,9 +15,14 @@ class PostRepository implements PostRepositoryInterface
     {
         $this->model = $post;
     }
-    public function all()
+    public function getAll(array $columns = ['*'], array $relations = []): Collection
     {
-        return $this->model->all();
+        return $this->model->with($relations)->get($columns);
+    }
+
+    public function paginate(int $perPage = 10, array $relations = [], $orderBy = 'ASC', $columns = ['*'])
+    {
+        return $this->model::query()->select($columns)->with($relations)->orderBy('id', $orderBy)->paginate($perPage);
     }
 
     public function show($id)

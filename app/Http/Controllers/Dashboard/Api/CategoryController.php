@@ -19,7 +19,7 @@ class CategoryController extends Controller
 
     public function index()
     {
-        $categories = $this->categoryRepository->all();
+        $categories = $this->categoryRepository->paginate(10, [], 'ASC', ['*']);
         return ApiResponse::success($categories);
     }
 

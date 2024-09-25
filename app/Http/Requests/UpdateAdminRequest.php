@@ -21,11 +21,11 @@ class UpdateAdminRequest extends FormRequest
      */
     public function rules(): array
     {
+        $userId = $this->route('admin');
         return [
-            'name' => 'required|string|max:255|unique:users,name,' . $this->route('admin'),
-            'email' => 'required|string|email|max:255|unique:users,email,' . $this->route('admin'),
+            'name' => 'required|string|max:255|unique:users,name,' . $userId,
+            'email' => 'required|string|email|max:255|unique:users,email,' . $userId,
             'password' => 'nullable|string|min:8',
-            'role' => 'required|string'
         ];
     }
 
@@ -40,8 +40,6 @@ class UpdateAdminRequest extends FormRequest
             'email.max' => 'The email may not be greater than 255 characters.',
             'email.unique' => 'The email has already been taken.',
             'password.min' => 'The password must be at least 8 characters long.',
-            'role.required' => 'The role field is required.',
-            'role.string' => 'The role must be a string.',
         ];
     }
 }
