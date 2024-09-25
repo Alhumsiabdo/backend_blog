@@ -20,7 +20,7 @@ class AdminController extends Controller
 
     public function index()
     {
-        $admins = $this->adminRepository->all();
+        $admins = $this->adminRepository->paginate(10, [], 'ASC', ['*'], 'role', 'admin');
         return ApiResponse::success($admins);
     }
 

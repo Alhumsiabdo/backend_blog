@@ -5,49 +5,30 @@ namespace App\Repository\Dashboard\Eloquent;
 use App\Models\User;
 use App\Repository\Dashboard\AdminRepositoryInterface;
 
-class AdminRepository implements AdminRepositoryInterface
+class AdminRepository extends BaseRepository implements AdminRepositoryInterface
 {
-    protected $model;
-
     public function __construct(User $user)
     {
-        $this->model = $user;
-    }
-    public function all()
-    {
-        return $this->model->where('role', 'admin')->get();
+        parent::__construct($user);
     }
 
-    public function find($id)
-    {
-        return $this->model->where('role', 'admin')->where('id', $id)->first();
-    }
-
-
+    /**
+     * Create a new admin with a default role of 'admin'
+     *
+     * @param array $data
+     * @return User
+     */
     public function create(array $data)
     {
+        // Ensure the 'role' is set to 'admin'
+        $data['role'] = 'admin';
+
+        // Hash the password if it's provided
+        if (isset($data['password'])) {
+            $data['password'] = bcrypt($data['password']);
+        }
+
+        // Create and return the new admin user
         return $this->model->create($data);
-    }
-
-    public function update($id, array $data)
-    {
-        $user = $this->model->find($id);
-        if ($user) {
-            $user->update($data);
-            return $user;
-        }
-
-        return null;
-    }
-
-    public function delete($id)
-    {
-        $user = $this->model->find($id);
-        if ($user) {
-            $user->delete();
-            return true;
-        }
-
-        return false;
     }
 }
