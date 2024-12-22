@@ -13,11 +13,13 @@ class AuthRepository implements AuthRepositoryInterface
     {
         $name = $userData['name'];
         $email = $userData['email'];
+        $role = $userData['role'];
         $password = $userData['password'];
 
         $user = new User;
         $user->name = $name;
         $user->email = $email;
+        $user->role = $role;
         $user->password = $password;
         $user->save();
 
@@ -26,14 +28,22 @@ class AuthRepository implements AuthRepositoryInterface
 
     public function login(array $credentials)
     {
-        if (! $token = Auth::attempt($credentials)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+        $user = User::where('email', $credentials['email'])->first();
+
+        if (!$user) {
+            return response()->json(['error' => 'Email not found'], 404);
         }
 
+        if (!Auth::attempt($credentials)) {
+            return response()->json(['error' => 'Invalid password'], 401);
+        }
+
+        $token = Auth::attempt($credentials);
         $user = Auth::user();
 
         return $this->respondWithToken($token, $user);
     }
+
 
     public function logout()
     {

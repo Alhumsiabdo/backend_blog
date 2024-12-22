@@ -24,6 +24,7 @@ class RegisterUserRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
+            'role' => 'required|string|in:admin,user',
             'password' => 'required|string|min:6',
         ];
     }
@@ -40,6 +41,10 @@ class RegisterUserRequest extends FormRequest
             'email.email' => 'The email must be a valid email address.',
             'email.max' => 'The email must not exceed 255 characters.',
             'email.unique' => 'The email has already been taken.',
+
+            'role.required' => 'The role field is required.',
+            'role.string' => 'The role must be a string.',
+            'role.in' => 'The role must be either admin or user.',
 
             'password.required' => 'The password field is required.',
             'password.string' => 'The password must be a string.',

@@ -29,7 +29,7 @@ Route::controller(AuthController::class)->group(function () {
 
 Route::group([
 
-    'middleware' => 'auth:api',
+    'middleware' => ['auth:api', 'role:admin'],
     'prefix' => 'auth'
 
 ], function () {
